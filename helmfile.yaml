@@ -1,0 +1,173 @@
+bases:
+  - environments.yaml
+---
+
+{{ if .Values.cilium.enabled }}
+{{ readFile "hf-templates.yaml" }}
+{{ else }}
+{{ readFile "hf-templates-cnp-disabled.yaml" }}
+{{ end }}
+
+repositories:
+- name: stable
+  url: https://charts.helm.sh/stable
+- name: bitnami
+  url: https://charts.bitnami.com/bitnami
+- name: hashicorp
+  url: https://helm.releases.hashicorp.com
+- name: codecentric
+  url: https://codecentric.github.io/helm-charts
+- name: rbkmoney
+  url: https://rbkmoney.github.io/charts
+
+# Path to the helmfile state file being processed BEFORE releases in this state file
+helmfiles:
+  - path: helmfile-infra.yaml
+{{- if and (eq .Values.prometheus.enabled true) ( eq .Namespace "") }}
+  - path: helmfile-prometheus.yaml
+{{- end }}
+
+
+releases:
+#External releases
+- name: kafka
+  <<: *default
+  chart: bitnami/kafka
+  version: 12.7.3
+- name: consul
+  <<: *default
+  chart: hashicorp/consul
+- name: postgres
+  <<: *default
+  chart: bitnami/postgresql
+  version: 9.7.2
+  wait: true
+- name: vault-cm
+  <<: *default
+  chart: rbkmoney/raw  
+- name: vault
+  <<: *default
+  chart: hashicorp/vault
+  needs:
+  - {{ .Namespace | default "default" }}/postgres
+  - {{ .Namespace | default "default" }}/vault-cm
+  wait: true
+- name: keycloak-realms
+  <<: *default
+  chart: rbkmoney/raw
+- name: keycloak
+  <<: *default
+  chart: codecentric/keycloak
+  needs:
+  - {{ .Namespace | default "default" }}/postgres
+  - {{ .Namespace | default "default" }}/keycloak-realms
+  wait: true
+#Rbkmoney processing releases
+- name: holmes
+  <<: *generic_stateless
+- name: riak
+  <<: *generic_statefull_json
+- name: machinegun
+  <<: *generic_stateless_json
+  needs:
+  - {{ .Namespace | default "default" }}/consul
+  - {{ .Namespace | default "default" }}/riak
+  - {{ .Namespace | default "default" }}/kafka
+- name: bender
+  <<: *generic_statefull_json
+- name: kds
+  <<: *generic_stateless_json
+- name: cds
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/kds
+    - {{ .Namespace | default "default" }}/riak
+- name: shumway
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/vault
+  wait: true
+- name: hooker
+  <<: *generic_stateless
+  needs:
+    - {{ .Namespace | default "default" }}/vault
+    - {{ .Namespace | default "default" }}/kafka
+    - {{ .Namespace | default "default" }}/hellgate
+#    - {{ .Namespace | default "default" }}/fault-detector
+- name: dominant
+  <<: *generic_stateless_json
+  needs:
+  - {{ .Namespace | default "default" }}/shumway
+  wait: true
+- name: binbase
+  <<: *generic_stateless
+- name: proxy-mocketbank
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/hellgate
+- name: proxy-mocketbank-mpi
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/proxy-mocketbank
+- name: proxy-mocket-inspector
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/hellgate
+- name: hellgate
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/dominant
+- name: capi-pcidss-v2
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/keycloak
+- name: capi-pcidss-v1
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/keycloak
+- name: url-shortener
+  <<: *generic_stateless
+- name: capi-v1
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/keycloak
+- name: capi-v2
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/keycloak
+- name: wapi-pcidss-v0
+  installed: false
+  <<: *generic_stateless_json
+  needs:
+   - {{ .Namespace | default "default" }}/keycloak
+- name: wapi
+  installed: false
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/keycloak
+- name: payform
+  <<: *generic_stateless
+- name: test-transaction
+  <<: *default
+  chart: rbkmoney/test-transaction
+  needs:
+    - {{ .Namespace | default "default" }}/shumway
+    - {{ .Namespace | default "default" }}/dominant
+    - {{ .Namespace | default "default" }}/cds
+    - {{ .Namespace | default "default" }}/keycloak
+- name: anapi
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/keycloak
+- name: binapi
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/keycloak
+- name: controlcenter
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/keycloak
+- name: dashboard
+  <<: *generic_stateless_json
+  needs:
+    - {{ .Namespace | default "default" }}/keycloak

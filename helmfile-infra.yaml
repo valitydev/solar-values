@@ -1,0 +1,20 @@
+bases:
+  - environments.yaml
+---
+
+{{ readFile "hf-templates.yaml" }}
+
+repositories:
+- name: rbkmoney
+  url: https://rbkmoney.github.io/charts
+
+releases:
+- name: logs
+  installed: {{ .Values.elk.enabled }}
+  <<: *infra_default
+  namespace: monitoring
+  chart: rbkmoney/elk
+- name: netpolicy
+  installed: {{ .Values.cilium.enabled }}
+  <<: *infra_default
+  chart: rbkmoney/netpolicy

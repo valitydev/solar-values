@@ -1,0 +1,62 @@
+# -*- mode: yaml -*-
+replicaCount: 1
+
+image:
+  repository: docker.io/rbkmoney/payform
+  tag: 5e8f3648568635398ea56075f19180eff28dad19
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8080
+
+configMap:
+  data:
+    appConfig.json: |
+      {{- tpl (readFile "appConfig.json.gotmpl") . | nindent 6 }}
+    payform.conf: |
+      {{- readFile "vhost.conf" | nindent 6 }}
+
+volumeMounts:
+  - name: config-volume
+    mountPath: /usr/share/nginx/html/appConfig.json
+    subPath: appConfig.json
+    readOnly: true
+  - name: config-volume
+    mountPath: /etc/nginx/vhosts.d/payform.conf
+    subPath: payform.conf
+    readOnly: true
+
+volumes:
+  - name: config-volume
+    configMap:
+      name: {{ .Release.Name }}
+
+livenessProbe:
+  httpGet:
+    path: /appConfig.json
+    port: http
+  initialDelaySeconds: 30
+  timeoutSeconds: 3
+readinessProbe:
+  httpGet:
+    path: /appConfig.json
+    port: http
+  initialDelaySeconds: 30
+  timeoutSeconds: 3
+
+ingress:
+  enabled: true
+  hosts:
+    - host: checkout.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+      paths:
+        - /
+{{- if .Values.services.ingress.tls.enabled }}
+  tls:
+    - secretName: {{ .Values.services.ingress.tls.secretName }}
+      hosts:
+        - checkout.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
+{{- end }}
+  servicePort: 8080

@@ -1,0 +1,46 @@
+fullnameOverride: {{ .Release.Name }}-{{ .Release.Namespace}}
+server:
+{{- if and .Values.services.global.ipv6only (not .Values.services.vault.dev) }}
+  standalone:
+    enabled: true
+  dataStorage:
+    enabled: true
+    size: 10Gi
+    mountPath: "/vault/data"
+    storageClass: null
+    accessMode: ReadWriteOnce
+{{- end }}
+{{- if .Values.services.vault.dev }}
+  dev:
+    enabled: true
+
+  postStart:
+    - /bin/sh
+    - -c
+    - /vault-init/init.vault.sh
+{{- end }}
+  extraLabels: 
+    selector.cilium.rbkmoney/release: {{ .Release.Name }}
+  volumes:
+    - name: vault-init
+      configMap:
+        name: vault-cm
+        defaultMode: 0775
+ # volumeMounts is a list of volumeMounts for the main server container. These are rendered
+ # via toYaml rather than pre-processed like the extraVolumes value.
+ # The purpose is to make it easy to share volumes between containers.
+  volumeMounts:
+    - mountPath: /vault-init
+      name: vault-init
+
+injector:
+  namespaceSelector:
+    matchLabels:
+      vaultname: {{ .Release.Namespace }}
+
+ciliumPolicies:
+  - filters:
+    - port: 5432
+      type: TCP
+    name: postgres
+    namespace: {{ .Release.Namespace }}

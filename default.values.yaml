@@ -1,0 +1,23 @@
+cilium:
+  enabled: false
+elk:
+  enabled: false
+prometheus:
+  enabled: true
+
+services:
+  global:
+    ipv6only: false
+  
+  vault:
+    dev: true
+
+  keycloak:
+    externalUrl: "https://auth.some-site.com"
+
+  ingress:
+    rootDomain: some-site.com
+    tls:
+      enabled: true
+      secretName: solar-tls
+
