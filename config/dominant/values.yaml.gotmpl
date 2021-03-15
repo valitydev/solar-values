@@ -12,7 +12,7 @@ configMap:
     sys.config: |
       {{- readFile "sys.config" | nindent 6 }}
     erl_inetrc: |
-      {{- readFile "../vm/erl_inetrc" | nindent 6 }}
+      {{- tpl (readFile "../vm/erl_inetrc.gotmpl") . | nindent 6 }}
     vm.args: |
       {{- tpl (readFile "../vm/erl_vm_args.gotmpl") . | nindent 6 }}
     init-script.sh: |
@@ -25,7 +25,7 @@ hook:
     tag: 07f58e297c03bcd50dc4695ddbcfa4eb30c9928e
     pullPolicy: IfNotPresent
   kind: post-install
-  command: "/opt/initdominant/init-script.sh"
+  command: "cat /etc/resolv.conf && /opt/initdominant/init-script.sh"
   volumes:
     - name: dom-init
       configMap:
