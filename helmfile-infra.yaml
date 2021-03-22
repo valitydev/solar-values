@@ -17,5 +17,4 @@ releases:
 - name: netpolicy
   installed: {{ .Values.cilium.enabled }}
   <<: *infra_default
-  #chart: rbkmoney/netpolicy
-  chart: ../charts/charts/netpolicy
+  chart: charts/netpolicy
