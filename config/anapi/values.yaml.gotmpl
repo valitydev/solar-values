@@ -84,3 +84,10 @@ ingress:
         - api.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}
 {{- end }}
   servicePort: 8080
+
+ciliumPolicies:
+  - filters:
+    - port: 8080
+      type: TCP
+    name: keycloak
+    namespace: {{ .Release.Namespace }}

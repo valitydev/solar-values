@@ -89,12 +89,6 @@ ciliumPolicies:
     namespace: {{ .Release.Namespace }}
   - filters:
     - port: 9092
-      rules:
-        kafka:
-        - role: consume
-          topics:
-            - mg-events-customer
-            - mg-events-invoice
       type: TCP
     name: kafka
     namespace: {{ .Release.Namespace }}

@@ -3,8 +3,8 @@
 replicaCount: 1
 
 image:
-  repository: docker.io/rbkmoney/proxy-mocketbank-mpi
-  tag: e43b6f00eca01eb57a6e917704bff608de57336a
+  repository: docker.io/rbkmoney/proxy-mocketbank-mpi-vulnerable
+  tag: d5f9c2d0b11295e17daeaf5a41b9d6d350ea4387
   pullPolicy: IfNotPresent
 
 configMap:
@@ -22,16 +22,16 @@ volumes:
 
 volumeMounts:
   - name: config-volume
-    mountPath: /opt/proxy-mocketbank-mpi/entrypoint.sh
+    mountPath: /opt/proxy-mocketbank-mpi-vulnerable/entrypoint.sh
     subPath: entrypoint.sh
     readOnly: true
   - name: config-volume
-    mountPath: /opt/proxy-mocketbank-mpi/fixture/cards.csv
+    mountPath: /opt/proxy-mocketbank-mpi-vulnerable/fixture/cards.csv
     subPath: cards.csv
     readOnly: true
 
 runopts:
-  command: ["/opt/proxy-mocketbank-mpi/entrypoint.sh"]
+  command: ["/opt/proxy-mocketbank-mpi-vulnerable/entrypoint.sh"]
 
 service:
   type: ClusterIP

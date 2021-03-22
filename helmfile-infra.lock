@@ -1,10 +1,7 @@
-version: v0.137.0
+version: v0.138.7
 dependencies:
 - name: elk
   repository: https://rbkmoney.github.io/charts
   version: 0.1.1
-- name: netpolicy
-  repository: https://rbkmoney.github.io/charts
-  version: 0.1.14
-digest: sha256:0708b0cf24f172ea5be5ae4dc5ea95217f258a440e8e806144683a42ffcd6ab0
-generated: "2021-02-26T00:57:26.519255+03:00"
+digest: sha256:99d249932466236295156ec67facf342c07483070db6ddd3b4a0715a405d23be
+generated: "2021-03-17T10:36:14.720034639+03:00"
