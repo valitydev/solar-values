@@ -119,34 +119,56 @@ releases:
     - {{ .Namespace | default "default" }}/dominant
 - name: capi-pcidss-v2
   <<: *generic_stateless_json
+  labels:
+    app: api
+    tier: front
   needs:
     - {{ .Namespace | default "default" }}/keycloak
 - name: capi-pcidss-v1
   <<: *generic_stateless_json
+  labels:
+    app: api
+    tier: front
   needs:
     - {{ .Namespace | default "default" }}/keycloak
 - name: url-shortener
   <<: *generic_stateless
+  labels:
+    tier: front
 - name: capi-v1
   <<: *generic_stateless_json
+  labels:
+    app: api
+    tier: front
   needs:
     - {{ .Namespace | default "default" }}/keycloak
 - name: capi-v2
   <<: *generic_stateless_json
+  labels:
+    app: api
+    tier: front
   needs:
     - {{ .Namespace | default "default" }}/keycloak
 - name: wapi-pcidss-v0
   installed: false
   <<: *generic_stateless_json
+  labels:
+    app: api
+    tier: front
   needs:
    - {{ .Namespace | default "default" }}/keycloak
 - name: wapi
   installed: false
   <<: *generic_stateless_json
+  labels:
+    app: api
+    tier: front
   needs:
     - {{ .Namespace | default "default" }}/keycloak
 - name: payform
   <<: *generic_stateless
+  labels:
+    tier: front
 - name: test-transaction
   <<: *default
   chart: rbkmoney/test-transaction
@@ -157,17 +179,27 @@ releases:
     - {{ .Namespace | default "default" }}/keycloak
 - name: anapi
   <<: *generic_stateless_json
+  labels:
+    app: api
+    tier: front
   needs:
     - {{ .Namespace | default "default" }}/keycloak
 - name: binapi
   <<: *generic_stateless_json
+  labels:
+    app: api
+    tier: front
   needs:
     - {{ .Namespace | default "default" }}/keycloak
 - name: controlcenter
   <<: *generic_stateless_json
+  labels:
+    tier: front
   needs:
     - {{ .Namespace | default "default" }}/keycloak
 - name: dashboard
   <<: *generic_stateless_json
+  labels:
+    tier: front
   needs:
     - {{ .Namespace | default "default" }}/keycloak
