@@ -2,7 +2,7 @@ version: v0.138.7
 dependencies:
 - name: consul
   repository: https://helm.releases.hashicorp.com
-  version: 0.30.0
+  version: 0.31.1
 - name: kafka
   repository: https://charts.bitnami.com/bitnami
   version: 12.7.3
@@ -102,5 +102,5 @@ dependencies:
 - name: vault
   repository: https://helm.releases.hashicorp.com
   version: 0.9.1
-digest: sha256:7ea120da59c285ce27c0b9a74120b7b3f6c0a82f64712bc1d2d8bfa2e9196fc7
-generated: "2021-03-18T18:26:01.331610549+03:00"
+digest: sha256:e92a08c70c24b0712d37bdd91dce04a972b1deebcfd3ba4905f416d102dafc68
+generated: "2021-03-25T09:53:28.021524977+03:00"

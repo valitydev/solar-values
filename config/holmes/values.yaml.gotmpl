@@ -9,3 +9,17 @@ image:
 
 livenessProbe: null
 readinessProbe: null
+
+ciliumPolicies:
+  - filters:
+    - port: 8022
+      type: TCP
+    - port: 8023
+      type: TCP
+    name: kds
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8080
+      type: TCP
+    name: payform
+    namespace: {{ .Release.Namespace }}
