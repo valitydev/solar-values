@@ -13,6 +13,12 @@ specs:
           k8s:io.kubernetes.pod.namespace: monitoring
       - matchLabels:
           k8s:io.kubernetes.pod.namespace: kube-system
+    egress:
+    - toEndpoints:
+      - matchLabels:
+          k8s:io.kubernetes.pod.namespace: monitoring
+      - matchLabels:
+          k8s:io.kubernetes.pod.namespace: kube-system
   - endpointSelector:
       matchLabels:
         k8s:io.kubernetes.pod.namespace: monitoring
@@ -21,6 +27,33 @@ specs:
     - fromEndpoints:
       - matchLabels:
           k8s:io.kubernetes.pod.namespace: {{ .Values.processingNamespace | default .Release.Namespace }}
+    egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            k8s:k8s-app: kube-dns
+      toPorts:
+        - ports:
+          - port: "53"
+            protocol: ANY
+          - port: "9153"
+            protocol: ANY
+    - toEntities:
+      - remote-node
+      toPorts:
+      - ports:
+        - protocol: TCP
+          port: "6443"
+        - protocol: TCP
+          port: "9100"
+    - toEntities:
+      - host
+      toPorts:
+      - ports:
+        - protocol: TCP
+          port: "6443"
+        - protocol: TCP
+          port: "9100"
   - endpointSelector:
       matchLabels:
         k8s:io.kubernetes.pod.namespace: {{ .Values.processingNamespace | default .Release.Namespace }}
