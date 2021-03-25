@@ -1,0 +1,13 @@
+controller:
+  volumes:
+    - emptyDir:
+        medium: Memory
+        sizeLimit: 512M
+      name: dshm
+  service:
+    type: NodePort
+    nodePorts:
+      http: 30337
+      https: 31337
+      tcp:
+        8080: 32808

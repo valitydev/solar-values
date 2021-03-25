@@ -69,6 +69,7 @@ podAnnotations:
     spring.flyway.url=jdbc:postgresql://postgres-postgresql:5432/shumway?sslmode=disable
     spring.flyway.user={{ .Data.username }}
     spring.flyway.password={{ .Data.password }}
+    spring.flyway.schemas=shm
     {{- end }}`}}
 
 metrics:

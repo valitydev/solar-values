@@ -13,11 +13,11 @@ services:
     dev: true
 
   keycloak:
-    externalUrl: "https://auth.some-site.com"
+    externalUrl: "https://auth.proc.loc:31337"
 
   ingress:
-    rootDomain: some-site.com
+    rootDomain: proc.loc
     tls:
       enabled: true
-      secretName: solar-tls
+      secretName: solarweb
 
