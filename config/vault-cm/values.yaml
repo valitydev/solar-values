@@ -35,6 +35,23 @@ configMap:
           GRANT ALL ON ALL SEQUENCES IN SCHEMA hook TO \"{{name}}\";" \
           default_ttl="1h" \
           max_ttl="240h"
+
+      vault write database/config/payouter \
+          plugin_name=postgresql-database-plugin \
+          allowed_roles="*" \
+          connection_url="postgresql://{{username}}:{{password}}@postgres-postgresql:5432/payouter?sslmode=disable" \
+          username="postgres" \
+          password="H@ckM3"
+      vault write database/roles/db-app-payouter \
+          db_name=payouter \
+          creation_statements="CREATE SCHEMA IF NOT EXISTS sht;
+          CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
+          GRANT CREATE ON DATABASE payouter TO \"{{name}}\";
+          GRANT ALL ON SCHEMA sht TO \"{{name}}\";
+          GRANT ALL ON ALL TABLES IN SCHEMA sht TO \"{{name}}\";
+          GRANT ALL ON ALL SEQUENCES IN SCHEMA sht TO \"{{name}}\";" \
+          default_ttl="1h" \
+          max_ttl="240h"
   
       vault auth enable kubernetes
       vault write auth/kubernetes/config \
@@ -54,5 +71,8 @@ configMap:
         capabilities = ["read"]
       }
       path "database/creds/db-app-hooker" {
+        capabilities = ["read"]
+      }
+      path "database/creds/db-app-payouter" {
         capabilities = ["read"]
       }

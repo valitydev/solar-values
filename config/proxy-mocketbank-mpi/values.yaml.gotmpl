@@ -47,3 +47,10 @@ readinessProbe:
   httpGet:
     path: /actuator/health
     port: api
+
+ciliumPolicies:
+  - filters:
+    - port: 8022
+      type: TCP
+    name: cds
+    namespace: {{ .Release.Namespace }}

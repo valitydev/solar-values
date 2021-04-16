@@ -1529,10 +1529,10 @@
       "clientAuthenticatorType": "client-secret",
       "secret": "**********",
       "redirectUris": [
-        "{{ .Values.services.keycloak.externalUrl }}/*"
+        "https://dashboard.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}:31337/*"
       ],
       "webOrigins": [
-        "{{ .Values.services.keycloak.externalUrl }}"
+        "https://dashboard.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}:31337"
       ],
       "notBefore": 0,
       "bearerOnly": false,
@@ -2225,10 +2225,10 @@
       "clientAuthenticatorType": "client-secret",
       "secret": "**********",
       "redirectUris": [
-        "{{ .Values.services.keycloak.externalUrl }}/*"
+        "https://auth.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}:31337/*"
       ],
       "webOrigins": [
-        "{{ .Values.services.keycloak.externalUrl }}"
+        "https://auth.{{ .Values.services.ingress.rootDomain | default "rbk.dev" }}:31337"
       ],
       "notBefore": 0,
       "bearerOnly": false,
@@ -3133,10 +3133,10 @@
     "ssl": "false",
     "user": "no-reply@rbkmoney.com"
   },
-  "loginTheme": "rbkmoney-hood",
-  "accountTheme": "rbkmoney",
+  "loginTheme": "keycloak",
+  "accountTheme": "keycloak",
   "adminTheme": "keycloak",
-  "emailTheme": "rbkmoney-hood",
+  "emailTheme": "keycloak",
   "eventsEnabled": true,
   "eventsExpiration": 51840000,
   "eventsListeners": [

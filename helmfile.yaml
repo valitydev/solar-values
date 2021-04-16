@@ -203,3 +203,6 @@ releases:
     tier: front
   needs:
     - {{ .Namespace | default "default" }}/keycloak
+- name: payouter
+  <<: *generic_stateless_json
+
