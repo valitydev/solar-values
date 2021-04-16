@@ -24,26 +24,21 @@ Helm Charts Repo
 ```
 kubectl create secret tls solarweb --key PATH_TO_KEY --cert PATH_TO_CERT
 ```
-`PATH_TO_KEY` - путь к pem файлу ключа
-`PATH_TO_CERT` - путь к pem файлу сертификата
-2. Установить ingress-controller
-```
-helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-helm repo update
-helm install ingress ingress-nginx/ingress-nginx -f rbkmoney/default-solar/config/ingress/values.yaml
-```
-3. Если используется домен, отличный от proc.loc, необходимо изменить его в файле default.values.yaml в строках:
-    externalUrl: "https://auth.proc.loc:31337"
+`PATH_TO_KEY` - путь к pem файлу ключа  
+`PATH_TO_CERT` - путь к pem файлу сертификата  
+
+2. Если используется домен, отличный от proc.loc, необходимо изменить его в файле default.values.yaml в строках:
+    externalUrl: "https://auth.proc.loc:31337"  
     rootDomain: proc.loc
-4. Установка платформы:
+3. Установка платформы:
 ```
 helmfile sync
 ```
-5. Expose необходимых сервисов:
+4. Expose необходимых сервисов:
 ```
 kubectl create -f nodeport.yaml
 ```
-6. Прописать в конфигурацию магазина drupal Merchant_Api_Key, полученый командой
+5. Прописать в конфигурацию магазина drupal, настройка осуществляется по адресу /admin/store/settings/rbkmoney, admin:admin, Приватный ключ, полученый командой:
 ```
 curl -d "client_id=$KC_CLIENT_ID" -d "username=$KC_USERNAME" -d "password=$KC_PASSWORD" -d 'grant_type=password' 'https://auth.proc.loc:31337/auth/realms/external/protocol/openid-connect/token' | jq -r '.access_token'
 ```
