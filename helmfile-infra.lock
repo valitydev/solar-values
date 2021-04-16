@@ -3,5 +3,8 @@ dependencies:
 - name: elk
   repository: https://rbkmoney.github.io/charts
   version: 0.1.1
-digest: sha256:99d249932466236295156ec67facf342c07483070db6ddd3b4a0715a405d23be
-generated: "2021-03-17T10:36:14.720034639+03:00"
+- name: ingress-nginx
+  repository: https://kubernetes.github.io/ingress-nginx
+  version: 3.29.0
+digest: sha256:cb27563674538785835e99cb9a9467b09724820d097e582dc7e9ded4f86a3a68
+generated: "2021-04-16T18:17:30.938027+03:00"

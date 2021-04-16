@@ -69,3 +69,45 @@ spec:
       protocol: TCP
   selector:
     selector.cilium.rbkmoney/release: postgres
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fwd-hellgate
+  namespace: default
+spec:
+  type: NodePort
+  ports:
+    - port: 8022
+      nodePort: 30723
+      protocol: TCP
+  selector:
+    selector.cilium.rbkmoney/release: hellgate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fwd-mocket-mpi
+  namespace: default
+spec:
+  type: NodePort
+  ports:
+    - port: 8022
+      nodePort: 30724
+      protocol: TCP
+  selector:
+    selector.cilium.rbkmoney/release: proxy-mocketbank-mpi
+apiVersion: v1
+kind: Service
+metadata:
+  name: fwd-kibana
+  namespace: monitoring
+spec:
+  type: NodePort
+  ports:
+    - port: 5601
+      nodePort: 30601
+      protocol: TCP
+  selector:
+    common.k8s.elastic.co/type: kibana
+    kibana.k8s.elastic.co/name: rbkmoney
