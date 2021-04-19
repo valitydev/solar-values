@@ -4,7 +4,6 @@ metadata:
   annotations:
     prometheus.io/port: "9153"
     prometheus.io/scrape: "true"
-  creationTimestamp: "2020-12-21T21:38:53Z"
   labels:
     addonmanager.kubernetes.io/mode: Reconcile
     k8s-app: kube-dns
