@@ -20,6 +20,10 @@ Helm Charts Repo
 
 Деплой
 ----------
+  
+> Перед деплоем необходимо присвоить неймспейсу, в который осуществляется деплой, лейбл vaultname=%ns_name%. 
+> например, для default неймспейса необходимо выполнить команду `kubectl label ns default vaultname=default`
+
 1. Создать секрет для tls (имя `solarweb` используется в скриптах, поэтому если используется другое имя секрета, необходимо изменить его в файле `default.values.yaml`):
 ```
 kubectl create secret tls solarweb --key PATH_TO_KEY --cert PATH_TO_CERT
