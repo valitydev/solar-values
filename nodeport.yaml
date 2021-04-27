@@ -92,11 +92,12 @@ metadata:
 spec:
   type: NodePort
   ports:
-    - port: 8022
+    - port: 8080
       nodePort: 30724
       protocol: TCP
   selector:
     selector.cilium.rbkmoney/release: proxy-mocketbank-mpi
+---
 apiVersion: v1
 kind: Service
 metadata:
