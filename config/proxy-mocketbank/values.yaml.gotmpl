@@ -66,3 +66,13 @@ ciliumPolicies:
       type: TCP
     name: cds
     namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8080
+      type: TCP
+    name: proxy-mocketbank-mpi
+    namespace: {{ .Release.Namespace }}
+  - filters:
+    - port: 8022
+      type: TCP
+    name: hellgate
+    namespace: {{ .Release.Namespace }}
